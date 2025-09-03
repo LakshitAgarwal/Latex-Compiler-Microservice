@@ -1,0 +1,22 @@
+# Node modules
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# OS files
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Temporary files
+tmp
+*.out
+*.pdf
+*.aux
+*.log

@@ -2,11 +2,14 @@
 FROM node:18-bullseye
 
 # Install LaTeX (basic + extra tools for pdflatex)
-RUN apt-get update && apt-get install -y --fix-missing \
+RUN apt-get update && apt-get install -y \
     texlive-latex-base \
     texlive-latex-extra \
     texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-lang-english \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Set working directory inside container
 WORKDIR /app

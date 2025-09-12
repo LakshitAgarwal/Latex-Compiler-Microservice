@@ -1,13 +1,13 @@
 # Use official Node.js image
 FROM node:18-bullseye
 
-# Install LaTeX (basic + extra tools for pdflatex)
+
+# Install LaTeX with optimized packages for resume compilation
 RUN apt-get update && apt-get install -y \
     texlive-latex-base \
     texlive-latex-extra \
     texlive-fonts-recommended \
-    texlive-fonts-extra \
-    texlive-lang-english \
+    texlive-latex-recommended \
     && rm -rf /var/lib/apt/lists/*
 
 

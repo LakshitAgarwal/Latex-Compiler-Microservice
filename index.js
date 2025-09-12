@@ -24,20 +24,40 @@ app.post("/compile", (req, res) => {
   const texPath = path.join(tempDir, "resume.tex");
   fs.writeFileSync(texPath, latexCode);
 
-  // Run pdflatex
+  // Run pdflatex with optimizations
   exec(
-    `pdflatex -interaction=nonstopmode -halt-on-error resume.tex`,
-    { cwd: tempDir, timeout: 15000 },
+    `pdflatex -interaction=nonstopmode -halt-on-error -file-line-error resume.tex`,
+    { cwd: tempDir, timeout: 30000 },
 
     (error, stdout, stderr) => {
+      console.log("pdflatex stdout:", stdout);
+      console.log("pdflatex stderr:", stderr);
+
       if (error) {
-        return res.status(500).json({ error: "Compilation failed" });
+        console.error("pdflatex error:", error);
+        return res.status(500).json({
+          error: "LaTeX compilation failed",
+          details: stderr || error.message,
+          stdout: stdout,
+        });
       }
+
       const pdfPath = path.join(tempDir, "resume.pdf");
+
+      // Check if PDF was actually created
+      if (!fs.existsSync(pdfPath)) {
+        return res.status(500).json({
+          error: "PDF was not generated",
+          details: stderr,
+          stdout: stdout,
+        });
+      }
+
       const pdf = fs.readFileSync(pdfPath);
       res.setHeader("Content-Type", "application/pdf");
       res.send(pdf);
 
+      // Clean up temp directory
       fs.rm(tempDir, { recursive: true, force: true }, () => {});
     }
   );
